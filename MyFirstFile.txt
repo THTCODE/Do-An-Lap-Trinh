@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+#define max_mssv 11
+#define max_name 31
+#define max_school 31
+#define max_day 11
+#define max_image 31
+#define max_introduce 101
+#define max_hoppy 101
+struct student
+{
+	char MSSV[max_mssv];
+	char Name[max_name];
+	char School[max_school];
+	int School_year;
+	char BirthDay[max_day];
+	char Image[max_image];
+	char Introduce_Myself[max_introduce];
+	char Hoppy[max_hoppy];
+};
+void Read_Student_FileCSV(FILE*, student[]);
+void main()
+{
+	FILE*f = fopen("1712849_Data3.csv", "rt");
+	student ST[20];
+	Read_Student_FileCSV(f, ST);
+	fclose(f);
+}
+void Read_Student_FileCSV(FILE*f, student ST[20])
+{
+	int i = 0;
+	int j = 0;
+	char *GIN = new char[256];
+	char *KIN;
+	int k;
+	fseek(f, 3L, SEEK_SET);
+	while (fgets(GIN, 255, f) != NULL)
+	{
+		if ((strlen(GIN)) > 0 && (GIN[strlen(GIN) - 1] == '\n'))
+			GIN[strlen(GIN) - 1] = '\0';
+		KIN = strtok(GIN, ","); strcpy(ST[i].MSSV, KIN); printf("%s\n", ST[i].MSSV);
+		KIN = strtok(NULL, ","); strcpy(ST[i].Name, KIN); printf("%s\n", ST[i].Name);
+		KIN = strtok(NULL, ","); strcpy(ST[i].School, KIN); printf("%s\n", ST[i].School);
+		KIN = strtok(NULL, ","); k = atoi(KIN); ST[i].School_year = k; printf("%i\n",ST[i].School_year);
+		KIN = strtok(NULL, ","); strcpy(ST[i].BirthDay, KIN); printf("%s\n", ST[i].BirthDay);
+		KIN = strtok(NULL, ","); strcpy(ST[i].Image, KIN); printf("%s\n", ST[i].Image);
+		KIN = strtok(NULL, ","); strcpy(ST[i].Introduce_Myself, KIN); printf("%s\n", ST[i].Introduce_Myself);
+		KIN = strtok(NULL, ","); strcpy(ST[i].Hoppy, KIN); printf("%s\n", ST[i].Hoppy);
+		printf("\n");
+		i++;
+	}
+	for (int j = 0; j < i; j++)
+	{
+		printf("MSSV: %s\n", ST[j].MSSV);
+		printf("Ho va ten: %s\n", ST[j].Name);
+		printf("Khoa: %s\n", ST[j].School);
+		printf("Khoa hoc: %i\n", ST[j].School_year);
+		printf("Ngay sinh: %s\n", ST[j].BirthDay);
+		printf("Hinh anh ca nhan:%s\n", ST[j].Image);
+		printf("Gioi thieu ban than:%s\n", ST[j].Introduce_Myself);
+		printf("So thich: %s\n", ST[j].Hoppy);
+		printf("\n");
+	}
+}
