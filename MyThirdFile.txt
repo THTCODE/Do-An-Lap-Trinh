@@ -1,0 +1,91 @@
+﻿#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+#include <wchar.h>
+#include <fcntl.h>
+#include <io.h>
+//#include <locale.h>
+#define max_mssv 11
+#define max_name 31
+#define max_school 31
+#define max_day 11
+#define max_image 31
+#define max_introduce 101
+#define max_hoppy 101
+struct student
+{
+	wchar_t MSSV[max_mssv];
+	wchar_t Name[max_name];
+	wchar_t School[max_school];
+	int School_year;
+	wchar_t BirthDay[max_day];
+	wchar_t Image[max_image];
+	wchar_t Introduce_Myself[max_introduce];
+	wchar_t Hoppy[11][max_hoppy];
+};
+void Read_Student_FileCSV(FILE*, student[]);
+void main()
+{
+	//setlocale(LC_CTYPE, "it_IT.UTF-16");
+	_setmode(_fileno(stdout), _O_U16TEXT);
+	_setmode(_fileno(stdin), _O_U16TEXT);
+	FILE*f = NULL;
+	//f = _wfopen(L"1712849_Data.csv", L"r");
+	f = _wfopen(L"1712849_Data.csv", L"r,ccs=UTF-8");
+	//f = _wfopen(L"1712849_Data.csv", L"r,ccs=UTF-U16LE");
+	student ST[20];
+	Read_Student_FileCSV(f, ST);
+	fclose(f);
+}
+void Read_Student_FileCSV(FILE*f, student ST[20])
+{
+	int i = 0;
+	int j = 0;
+	wchar_t GIN[256];
+	wchar_t *KIN;
+	int a[11], l = 0;
+	int k;
+	fseek(f, 3L, SEEK_SET);
+	while (fgetws(GIN, 255, f) != NULL)
+	{
+		/*if ((strlen(GIN)) > 0 && (GIN[strlen(GIN) - 1] == '\n'))
+			GIN[strlen(GIN) - 1] = '\0';*/
+		//GIN[wcslen(GIN) - 1] = L'\0';
+		KIN = wcstok(GIN, L","); wcscpy(ST[i].MSSV,KIN); wprintf(L"%s\n", ST[i].MSSV);
+		KIN = wcstok(NULL, L","); wcscpy(ST[i].Name, KIN); wprintf(L"%s\n", ST[i].Name);
+		KIN = wcstok(NULL, L","); wcscpy(ST[i].School, KIN); wprintf(L"%s\n", ST[i].School);
+		KIN = wcstok(NULL, L","); ST[i].School_year=_wtoi(KIN); wprintf(L"%i\n", ST[i].School_year);
+		KIN = wcstok(NULL, L","); wcscpy(ST[i].BirthDay, KIN); wprintf(L"%s\n", ST[i].BirthDay);
+		KIN = wcstok(NULL, L","); wcscpy(ST[i].Image, KIN); wprintf(L"%s\n", ST[i].Image);
+		KIN = wcstok(NULL, L","); wcscpy(ST[i].Introduce_Myself, KIN); wprintf(L"%s\n", ST[i].Introduce_Myself);
+		j = 0;
+		while (1)
+		{
+			KIN = wcstok(NULL, L",");
+			if (KIN == NULL) break;			
+			wcscpy(ST[i].Hoppy[j],KIN); wprintf(L"%s\n", ST[i].Hoppy[j]);
+			j++;
+		}
+		a[l] = j; l++;
+		wprintf(L"\n");
+		i++;
+	}
+	wprintf(L"\n");
+	k = 0;
+	for (j = 0; j < i; j++)
+	{
+		wprintf(L"MSSV: %s\n", ST[j].MSSV);
+		wprintf(L"Họ và tên: %s\n", ST[j].Name);
+		wprintf(L"Khoa: %s\n", ST[j].School);
+		wprintf(L"Khóa học: %i\n", ST[j].School_year);
+		wprintf(L"Ngày sinh: %s\n", ST[j].BirthDay);
+		wprintf(L"Hình ảnh cá nhân: %s\n", ST[j].Image);
+		wprintf(L"Giới thiệu bản thân: %s\n", ST[j].Introduce_Myself);
+		wprintf(L"Sở thích cá nhân: ");
+		for (int k1 = 0; k1 < a[k]; k1++)
+				wprintf(L"%s\t\t", ST[j].Hoppy[k1]);
+		k++;
+		wprintf(L"\n\n");
+	}
+}
